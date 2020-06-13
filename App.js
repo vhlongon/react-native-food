@@ -1,22 +1,16 @@
-import React from 'react';
-import { Text, View } from 'react-native';
+import { createAppContainer } from 'react-navigation';
+import { createStackNavigator } from 'react-navigation-stack';
 import EStyleSheet from 'react-native-extended-stylesheet';
-
-const styles = EStyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+import Search from './src/screens/Search';
 
 EStyleSheet.build({});
 
-const App = () => (
-  <View style={styles.container}>
-    <Text>Open up App.js to start working on your app!</Text>
-  </View>
+const navigator = createStackNavigator(
+  { Search },
+  {
+    initialRouteName: 'Search',
+    defaultNavigationOptions: { title: 'Business search' },
+  },
 );
 
-export default App;
+export default createAppContainer(navigator);
