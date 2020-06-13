@@ -1,15 +1,8 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { Text, View } from 'react-native';
+import EStyleSheet from 'react-native-extended-stylesheet';
 
-export default function App() {
-  return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-    </View>
-  );
-}
-
-const styles = StyleSheet.create({
+const styles = EStyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
@@ -17,3 +10,13 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
 });
+
+EStyleSheet.build({});
+
+const App = () => (
+  <View style={styles.container}>
+    <Text>Open up App.js to start working on your app!</Text>
+  </View>
+);
+
+export default App;
