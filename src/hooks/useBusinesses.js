@@ -11,7 +11,6 @@ const useBusinesses = ({
   initialTerm,
   manual = true,
   initialData = [],
-  refetchOnMount = true,
   retry = false,
   ...config
 } = {}) => {
@@ -19,9 +18,8 @@ const useBusinesses = ({
   return useQuery(['searchResults', { term: termToSearch, limit, location }], getBusinesses, {
     manual,
     initialData,
-    refetchOnMount,
     retry,
-    config,
+    ...config,
   });
 };
 
