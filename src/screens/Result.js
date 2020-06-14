@@ -5,8 +5,9 @@ import useBusiness from '../hooks/useBusiness';
 
 const styles = EStyleSheet.create({
   image: {
-    aspectRatio: '3/2',
-    width: '100%',
+    // aspectRatio: '3/2', -> does not work properly  on browsers
+    width: 300,
+    height: 200,
     borderRadius: 4,
     borderColor: 'rgba(135,206,235, 0.8)',
     borderWidth: 8,
@@ -36,7 +37,7 @@ const styles = EStyleSheet.create({
 
 const Result = ({ navigation }) => {
   const id = navigation.getParam('id');
-  const { data, error, isFetching, status } = useBusiness({ variables: { id } });
+  const { status, data, error, isFetching } = useBusiness(id);
 
   if (status === 'loading' || isFetching) {
     return <Text>Loading...</Text>;

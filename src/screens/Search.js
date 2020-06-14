@@ -20,12 +20,14 @@ const Content = ({ error, data, status, isFetching }) => {
     return <Text style={styles.infoText}>Something went wrong: {error.message}</Text>;
   }
 
-  if (data.length) {
-    const resultsWithPrice = filterBy(data, 'price');
+  const businesses = data?.data?.businesses || [];
+
+  if (businesses.length) {
+    const resultsWithPrice = filterBy(businesses, 'price');
     return (
       <View>
         <Text style={styles.infoText}>
-          We have found <Text style={styles.count}>{data.length}</Text> results
+          We have found <Text style={styles.count}>{businesses.length}</Text> results
         </Text>
         <ScrollView>
           <ResultsList title="Cost Effective" results={resultsWithPrice('$')} />
@@ -43,7 +45,7 @@ const Search = () => {
   const { status, data, error, refetch, isFetching } = useBusinesses({
     variables: { term },
     initialTerm: 'pasta',
-    retry: false,
+    config: { retry: false, manual: true, initialData: {} },
   });
 
   useEffect(() => {
@@ -53,7 +55,7 @@ const Search = () => {
   return (
     // Wither use flex 1 in a view or return <> instead
     <View style={{ flex: 1 }}>
-      <SearchBar term={term} onTermChange={setTerm} onTermSubmit={refetch} />
+      <SearchBar term={term} onTermChange={setTerm} onTermSubmit={refetch} refetch={refetch} />
       <Content status={status} error={error} data={data} isFetching={isFetching} />
     </View>
   );
