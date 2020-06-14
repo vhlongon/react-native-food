@@ -1,33 +1,58 @@
-import React, { useState } from 'react';
-import { View, Text } from 'react-native';
-import { useQuery } from 'react-query';
+import React, { useState, useEffect } from 'react';
+import { View, Text, ScrollView } from 'react-native';
+import EStyleSheet from 'react-native-extended-stylesheet';
 import SearchBar from '../components/SearchBar';
-import api from '../utils/api';
+import useBusinesses from '../hooks/useBusinesses';
+import ResultsList from '../components/ResultsList';
+
+const filterBy = (data, filter) => value => data.filter(dataItem => dataItem[filter] === value);
+
+const styles = EStyleSheet.create({
+  infoText: { color: '$textColor', margin: '$marginBase' },
+  count: { fontWeight: 'bold' },
+});
 
 const Content = ({ error, data, status, isFetching }) => {
   if (status === 'loading' || isFetching) {
-    return <Text>Loading...</Text>;
+    return <Text style={styles.infoText}>Loading...</Text>;
   }
   if (status === 'error') {
-    return <Text>Error: {error.message}</Text>;
+    return <Text style={styles.infoText}>Something went wrong: {error.message}</Text>;
   }
 
-  const businesses = data?.data?.businesses || [];
-  return (
-    <Text>{businesses.length ? `we have found: ${businesses.length}` : 'No results yet'}</Text>
-  );
+  if (data.length) {
+    const resultsWithPrice = filterBy(data, 'price');
+    return (
+      <View>
+        <Text style={styles.infoText}>
+          We have found <Text style={styles.count}>{data.length}</Text> results
+        </Text>
+        <ScrollView>
+          <ResultsList title="Cost Effective" results={resultsWithPrice('$')} />
+          <ResultsList title="Bit pricier" results={resultsWithPrice('$$')} />
+          <ResultsList title="Big spender" results={resultsWithPrice('$$$')} />
+        </ScrollView>
+      </View>
+    );
+  }
+  return <Text style={styles.infoText}>Nothing found yet</Text>;
 };
 
 const Search = () => {
   const [term, setTerm] = useState('');
-  const { status, data, error, refetch, isFetching } = useQuery(
-    'searchResults',
-    () => api.get('/search', { params: { term, limit: 50, location: 'gothenburg' } }),
-    { manual: true, initialData: [] },
-  );
+  const { status, data, error, refetch, isFetching } = useBusinesses({
+    variables: { term },
+    initialTerm: 'pasta',
+    retry: false,
+  });
+
+  useEffect(() => {
+    refetch();
+  }, []);
 
   return (
-    <View>
+    // Wither use flex 1 in a view or return <> instead
+    <View style={{ flex: 1 }}>
       <SearchBar term={term} onTermChange={setTerm} onTermSubmit={refetch} />
       <Content status={status} error={error} data={data} isFetching={isFetching} />
     </View>
