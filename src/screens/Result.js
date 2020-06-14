@@ -48,22 +48,20 @@ const Result = ({ navigation }) => {
   }
 
   return (
-    <View style={styles.container}>
-      <View style={styles.content}>
-        <Text style={styles.title}>{data.name}</Text>
-        <FlatList
-          data={data.photos}
-          keyExtractor={photo => photo}
-          contentContainerStyle={styles.imagesContainer}
-          renderItem={({ item, index }) => (
-            <Image
-              style={EStyleSheet.child(styles, 'image', index, data.photos.length)}
-              source={{ uri: item }}
-            />
-          )}
-        />
-      </View>
-    </View>
+    <>
+      <Text style={styles.title}>{data.name}</Text>
+      <FlatList
+        data={data.photos}
+        keyExtractor={photo => photo}
+        contentContainerStyle={styles.imagesContainer}
+        renderItem={({ item, index }) => (
+          <Image
+            style={EStyleSheet.child(styles, 'image', index, data.photos.length)}
+            source={{ uri: item }}
+          />
+        )}
+      />
+    </>
   );
 };
 
